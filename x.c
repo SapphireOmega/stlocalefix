@@ -1585,8 +1585,11 @@ xsettitle(char *p)
 	XTextProperty prop;
 	DEFAULT(p, opt_title);
 
-	Xutf8TextListToTextProperty(xw.dpy, &p, 1, XUTF8StringStyle,
-			&prop);
+	if (XSupportsLocale())
+		Xutf8TextListToTextProperty(xw.dpy, &p, 1, XUTF8StringStyle,
+				&prop);
+	else
+		XStringListToTextProperty(&p, 1, &prop);
 	XSetWMName(xw.dpy, xw.win, &prop);
 	XSetTextProperty(xw.dpy, xw.win, &prop, xw.netwmname);
 	XFree(prop.value);
